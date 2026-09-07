@@ -1,0 +1,17 @@
+{
+  "name": "ticket-seckill-defense-chapter-one",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "CHOKIDAR_USEPOLLING=true slidev slides.md",
+    "build": "slidev build slides.md",
+    "export:pdf": "slidev export slides.md --format pdf --output dist/门票秒杀系统答辩.pdf --timeout 120000 --wait 1000",
+    "export:pptx": "slidev export slides.md --format pptx --output dist/门票秒杀系统答辩.pptx --with-clicks false --timeout 120000 --wait 1000"
+  },
+  "devDependencies": {
+    "@slidev/cli": "52.19.1",
+    "@slidev/theme-default": "0.25.0",
+    "playwright-chromium": "1.63.0"
+  }
+}
