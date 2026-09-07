@@ -287,3 +287,35 @@ mdc: true
 <!--
 库表之间未声明物理外键，图中的连线只表示代码和字段层面的逻辑关联。
 -->
+
+---
+
+<div class="topline"><span>2.2 / B 页秒杀下单时序</span><span>完整流程图</span></div>
+
+# B 页秒杀下单时序图
+
+<a class="diagram-url reveal" href="/img/B页秒杀下单时序图.png" target="_blank" rel="noopener noreferrer">
+  <span>查看完整原图</span>
+  <strong>/img/B页秒杀下单时序图.png</strong>
+  <i>↗</i>
+</a>
+
+<!--
+点击页面中的链接，在新窗口查看完整的 B 页秒杀下单时序图。
+-->
+
+---
+
+<div class="topline"><span>2.3 / 库存回填流程</span><span>完整流程图</span></div>
+
+# 库存回填流程图
+
+<a class="diagram-url reveal" href="/img/库存回填流程图.png" target="_blank" rel="noopener noreferrer">
+  <span>查看完整原图</span>
+  <strong>/img/库存回填流程图.png</strong>
+  <i>↗</i>
+</a>
+
+<!--
+点击页面中的链接，在新窗口查看完整的库存回填流程图。
+-->

@@ -12,6 +12,7 @@
   "devDependencies": {
     "@slidev/cli": "52.19.1",
     "@slidev/theme-default": "0.25.0",
+    "markdown-it-github-alerts": "1.0.1",
     "playwright-chromium": "1.63.0"
   }
 }

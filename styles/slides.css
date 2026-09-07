@@ -229,3 +229,48 @@
   border: 0;
   background: var(--qfc-yellow);
 }
+
+.diagram-url {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 20px 36px;
+  margin-top: 140px;
+  padding: 62px 72px;
+  border: 1px solid var(--line);
+  border-bottom: 12px solid var(--qfc-yellow);
+  color: var(--ink);
+  background: var(--soft);
+  text-decoration: none;
+}
+
+.diagram-url span {
+  color: #555;
+  font-size: var(--type-small);
+}
+
+.diagram-url strong {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.diagram-url i {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: grid;
+  width: 96px;
+  height: 96px;
+  place-items: center;
+  background: var(--qfc-yellow);
+  color: var(--ink);
+  font-size: 52px;
+  font-style: normal;
+}
+
+.diagram-url:hover {
+  border-color: var(--qfc-yellow-strong);
+  background: #fff;
+}
