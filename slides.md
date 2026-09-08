@@ -319,3 +319,188 @@ mdc: true
 <!--
 点击页面中的链接，在新窗口查看完整的库存回填流程图。
 -->
+
+---
+
+<div class="topline"><span>3.1 / AI 探索与应用</span><span>复杂代码理解</span></div>
+
+# AI 辅助复杂代码理解
+
+<div class="ai-understanding">
+  <div class="ai-pain-grid">
+    <div class="ai-pain reveal">
+      <span>01</span>
+      <strong>调用链长</strong>
+      <p>频繁跨类、跨模块跳转</p>
+    </div>
+    <div class="ai-pain reveal" style="--delay:.06s">
+      <span>02</span>
+      <strong>分支复杂</strong>
+      <p>正常、异常、兜底逻辑交织</p>
+    </div>
+    <div class="ai-pain reveal" style="--delay:.12s">
+      <span>03</span>
+      <strong>全局视角弱</strong>
+      <p>容易陷入局部实现</p>
+    </div>
+  </div>
+
+  <div class="ai-code-flow reveal" style="--delay:.18s">
+    <div class="ai-flow-node source"><span>输入</span><strong>源码</strong></div>
+    <i>→</i>
+    <div class="ai-flow-node"><span>识别</span><strong>调用关系</strong></div>
+    <i>→</i>
+    <div class="ai-flow-node"><span>提取</span><strong>业务节点</strong></div>
+    <i>→</i>
+    <div class="ai-flow-node"><span>梳理</span><strong>条件与异常</strong></div>
+    <i>→</i>
+    <div class="ai-flow-node"><span>生成</span><strong>流程图 / 时序图</strong></div>
+    <i>→</i>
+    <div class="ai-flow-node model"><span>输出</span><strong>整体业务模型</strong></div>
+  </div>
+
+  <div class="ai-core-thought reveal" style="--delay:.24s">
+    <span>核心思想</span>
+    <strong>将非结构化的代码阅读过程，转化为结构化、可视化的业务理解过程。</strong>
+  </div>
+</div>
+
+<!--
+随着系统规模增长，业务逻辑会分散在多个模块、类和方法中。传统阅读方式需要频繁跳转，正常、异常和兜底分支又相互交织，很容易陷入局部实现。AI 可以从源码中识别调用关系、提取业务节点并梳理条件分支，最终形成流程图和时序图，帮助开发人员建立整体业务模型。
+-->
+
+---
+
+<div class="topline"><span>3.2 / AI 探索与应用</span><span>可视化价值</span></div>
+
+# AI + 可视化降低复杂系统理解成本
+
+<div class="ai-visual-value">
+  <div class="ai-diagram-panel flow-panel reveal">
+    <header><span>业务视角</span><strong>流程图</strong><small>关注“业务怎么走”</small></header>
+    <div class="mini-flow">
+      <b>输入</b><i>→</i><b>校验</b><i>→</i><b>处理</b><i>→</i><b>分支</b><i>→</i><b>结果</b>
+    </div>
+    <p>适合业务流程、条件判断与异常路径分析</p>
+  </div>
+
+  <div class="ai-diagram-panel sequence-panel reveal" style="--delay:.08s">
+    <header><span>协作视角</span><strong>时序图</strong><small>关注“系统怎么协作”</small></header>
+    <div class="mini-sequence">
+      <div><b>用户</b><span></span></div>
+      <i>→</i>
+      <div><b>服务 A</b><span></span></div>
+      <i>→</i>
+      <div><b>服务 B</b><span></span></div>
+      <i>→</i>
+      <div><b>中间件</b><span></span></div>
+      <i>→</i>
+      <div><b>服务 C</b><span></span></div>
+    </div>
+    <p>适合跨服务调用、先后顺序与异常时序分析</p>
+  </div>
+
+  <div class="human-ai-handoff reveal" style="--delay:.16s">
+    <div class="role-block ai-role"><span>AI</span><strong>提取 · 归纳 · 可视化</strong></div>
+    <div class="handoff-arrow"><span>信息模型</span><i>→</i></div>
+    <div class="role-block human-role"><span>开发人员</span><strong>校验 · 判断 · 设计</strong></div>
+  </div>
+
+  <div class="ai-value-chain reveal" style="--delay:.24s">
+    <strong>更快建立全局视角</strong><i>→</i><strong>更容易发现关键分支</strong><i>→</i><strong>降低复杂系统理解成本</strong>
+  </div>
+</div>
+
+<!--
+流程图关注业务如何流转，适合分析输入、校验、处理、分支和结果；时序图关注系统如何协作，适合分析跨服务调用顺序和异常时序。AI 负责提取、归纳和可视化，开发人员负责结合源码完成校验、判断和设计。AI 提升的是信息整理与认知效率，关键业务判断仍由开发人员完成。
+-->
+
+---
+
+<div class="topline"><span>3.3 / AI 探索与应用</span><span>传统 AI 编程</span></div>
+
+# AI 会“写代码”，但不一定真正“完成开发”
+
+<div class="traditional-ai-page">
+  <div class="traditional-chain reveal">
+    <div class="chain-node"><span>需求</span></div><i>→</i>
+    <div class="chain-node ai-code"><span>AI 编码</span></div><i>→</i>
+    <div class="chain-node manual"><small>人工</small><span>Review</span></div><i>→</i>
+    <div class="chain-node manual"><small>人工</small><span>运行</span></div><i>→</i>
+    <div class="chain-node manual"><small>人工</small><span>测试</span></div><i>→</i>
+    <div class="chain-node issue"><span>发现问题</span></div><i>→</i>
+    <div class="chain-node ai-code"><span>再交给 AI</span></div>
+  </div>
+
+  <div class="manual-handoff reveal" style="--delay:.08s">
+    <span>编码与验证之间存在多次人工接力</span>
+  </div>
+
+  <div class="traditional-limit-grid">
+    <div class="traditional-limit reveal" style="--delay:.12s">
+      <span>01</span><strong>缺少运行环境</strong><p>AI 只能基于静态代码推理</p>
+    </div>
+    <div class="traditional-limit reveal" style="--delay:.18s">
+      <span>02</span><strong>缺少运行反馈</strong><p>无法获得真实日志、异常与数据状态</p>
+    </div>
+    <div class="traditional-limit reveal" style="--delay:.24s">
+      <span>03</span><strong>验证依赖人工</strong><p>编码与测试仍需人工反复衔接</p>
+    </div>
+  </div>
+
+  <div class="development-thesis reveal" style="--delay:.30s">
+    <span>开发闭环</span>
+    <strong>代码生成只是起点；能够运行、观察、验证和修正，才是完整的软件开发过程。</strong>
+  </div>
+</div>
+
+<!--
+传统 AI 编程通常止步于代码生成。AI 输出代码后，仍需要开发人员完成 Review、运行和测试，再把发现的问题重新交给 AI。由于 AI 缺少真实运行环境和运行反馈，编码与验证之间存在多次人工接力，尚未形成完整的软件开发闭环。
+-->
+
+---
+
+<div class="topline"><span>3.4 / AI 探索与应用</span><span>Loop 编程</span></div>
+
+# Loop 编程：构建 AI 自主验证闭环
+
+<div class="loop-programming-page">
+  <div class="loop-cycle reveal">
+    <svg viewBox="0 0 760 520" aria-hidden="true">
+      <defs>
+        <marker id="loop-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z"></path>
+        </marker>
+      </defs>
+      <path d="M205 90 H300"></path>
+      <path d="M460 90 H555"></path>
+      <path d="M650 145 V330"></path>
+      <path d="M555 410 H460"></path>
+      <path d="M300 410 H205"></path>
+      <path d="M110 330 V145"></path>
+    </svg>
+    <div class="loop-node loop-read"><span>Read</span><strong>理解代码</strong></div>
+    <div class="loop-node loop-code"><span>Code</span><strong>编写 / 修改</strong></div>
+    <div class="loop-node loop-run"><span>Run</span><strong>启动环境</strong></div>
+    <div class="loop-node loop-observe"><span>Observe</span><strong>日志 / 状态</strong></div>
+    <div class="loop-node loop-fix"><span>Fix</span><strong>定位并修复</strong></div>
+    <div class="loop-node loop-verify"><span>Verify</span><strong>执行测试</strong></div>
+    <div class="loop-feedback"><span>真实反馈</span><strong>可执行<br />可观察<br />可验证</strong></div>
+  </div>
+
+  <div class="agent-evolution reveal" style="--delay:.12s">
+    <span class="evolution-label">能力跃迁</span>
+    <div class="evolution-from"><small>传统 AI</small><strong>Code Generator</strong><p>根据上下文生成代码</p></div>
+    <i>↓</i>
+    <div class="evolution-to"><small>Loop 编程</small><strong>开发 Agent</strong><p>理解代码 + 执行代码<br />获取反馈 + 自我修正<br />验证结果</p></div>
+  </div>
+
+  <div class="loop-conclusion reveal" style="--delay:.22s">
+    <span>核心</span>
+    <strong>不是让 AI 写更多代码，而是为 AI 建立“可执行、可观察、可验证”的反馈环境。</strong>
+  </div>
+</div>
+
+<!--
+Loop 编程为 AI 提供真实的执行和反馈环境，使它能够完成理解代码、编写修改、启动环境、执行测试、观察日志与状态、定位问题、修复并重新验证的循环。核心不是让 AI 写更多代码，而是让 AI 从 Code Generator 转变为具备自主验证能力的开发 Agent。
+-->
