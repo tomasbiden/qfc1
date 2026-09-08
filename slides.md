@@ -504,3 +504,130 @@ mdc: true
 <!--
 Loop 编程为 AI 提供真实的执行和反馈环境，使它能够完成理解代码、编写修改、启动环境、执行测试、观察日志与状态、定位问题、修复并重新验证的循环。核心不是让 AI 写更多代码，而是让 AI 从 Code Generator 转变为具备自主验证能力的开发 Agent。
 -->
+
+---
+
+<div class="topline"><span>4.1 / 项目总结与收获</span><span>项目成果</span></div>
+
+# 从 0 到 1 建设门票秒杀系统
+
+<div class="project-summary-page">
+  <div class="summary-business-chain reveal">
+    <div><span>01</span><strong>活动配置</strong></div><i>→</i>
+    <div><span>02</span><strong>商品展示</strong></div><i>→</i>
+    <div><span>03</span><strong>库存预热</strong></div><i>→</i>
+    <div class="chain-highlight"><span>04</span><strong>秒杀抢购</strong></div><i>→</i>
+    <div><span>05</span><strong>订单创建</strong></div><i>→</i>
+    <div><span>06</span><strong>状态同步</strong></div><i>→</i>
+    <div><span>07</span><strong>库存回填</strong></div><i>→</i>
+    <div><span>08</span><strong>异常兜底</strong></div>
+  </div>
+
+  <div class="summary-capability-grid">
+    <section class="summary-capability reveal" style="--delay:.08s">
+      <header><span>CONCURRENCY</span><strong>高并发</strong><p>让流量扛得住</p></header>
+      <ul>
+        <li><b>流量控制</b><span>单机限流 + Redis 总量限流</span></li>
+        <li><b>缓存加速</b><span>本地配置 + Caffeine 商品缓存</span></li>
+        <li><b>快速失败</b><span>Redis 库存预检查</span></li>
+      </ul>
+    </section>
+    <section class="summary-capability consistency reveal" style="--delay:.14s">
+      <header><span>CONSISTENCY</span><strong>一致性</strong><p>让库存最终对得上</p></header>
+      <ul>
+        <li><b>有序扣减</b><span>Redis 竞争 → DB 扣减</span></li>
+        <li><b>失败补偿</b><span>扣减、生单异常及时补偿</span></li>
+        <li><b>状态收敛</b><span>订单、Redis、DB 最终一致</span></li>
+      </ul>
+    </section>
+    <section class="summary-capability idempotency reveal" style="--delay:.20s">
+      <header><span>IDEMPOTENCY</span><strong>幂等性</strong><p>让重复执行不出错</p></header>
+      <ul>
+        <li><b>防重复下单</b><span>分布式锁 + 秒杀单校验</span></li>
+        <li><b>统一回填</b><span>多入口复用同一库存回填能力</span></li>
+        <li><b>防重复回填</b><span>锁 + 状态判断，最多回填一次</span></li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<!--
+这个项目完成的不是一个孤立的抢购接口，而是从活动配置、库存预热到订单创建、状态同步、库存回填和异常兜底的完整业务闭环。系统最终围绕三个核心问题形成能力：高并发保证流量扛得住，一致性保证库存最终对得上，幂等性保证重复请求和重复补偿不会造成错误。
+-->
+
+---
+
+<div class="topline"><span>4.2 / 项目总结与收获</span><span>个人认知</span></div>
+
+# AI 时代：从执行者走向决策者
+
+<div class="developer-role-page">
+  <div class="ai-coverage reveal">
+    <div class="coverage-caption"><span>AI 能力边界不断扩大</span><i></i></div>
+    <div class="coverage-flow">
+      <strong>理解代码</strong><i>→</i><strong>方案设计</strong><i>→</i><strong>编写代码</strong><i>→</i><strong>Code Review</strong><i>→</i><strong>测试验证</strong>
+    </div>
+  </div>
+
+  <div class="role-shift reveal" style="--delay:.08s">
+    <span>执行能力持续增强</span><i>↓</i><strong>开发者价值向决策与责任迁移</strong>
+  </div>
+
+  <div class="developer-value-grid">
+    <div class="developer-value reveal" style="--delay:.12s"><span>01</span><strong>定义问题</strong><p>明确真正需要解决的问题</p></div>
+    <div class="developer-value reveal" style="--delay:.17s"><span>02</span><strong>判断方案</strong><p>权衡收益、成本与潜在风险</p></div>
+    <div class="developer-value reveal" style="--delay:.22s"><span>03</span><strong>验证结果</strong><p>区分“能够运行”与“业务正确”</p></div>
+    <div class="developer-value final-owner reveal" style="--delay:.27s"><span>04</span><strong>最终负责</strong><p>对设计、质量与生产结果负责</p></div>
+  </div>
+
+  <div class="role-conclusion reveal" style="--delay:.32s">
+    <span>AI</span><strong>提升执行效率</strong><i>×</i><span>人</span><strong>决定方向与质量</strong>
+  </div>
+</div>
+
+<!--
+AI 的能力正在逐渐覆盖理解、设计、编码、审查和测试等研发环节。当执行能力不断被 AI 增强，开发者的核心价值会更多体现在定义问题、判断方案、验证业务结果以及为最终生产质量负责。AI 提升执行效率，但方向和质量仍然由人决定。
+-->
+
+---
+
+<div class="topline"><span>4.3 / 项目总结与收获</span><span>方法沉淀</span></div>
+
+# AI 时代的高质量研发实践
+
+<div class="production-practice-page">
+  <div class="production-question reveal"><span>核心问题</span><strong>如何借助 AI 产出生产级代码？</strong></div>
+
+  <div class="production-pipeline">
+    <section class="pipeline-stage reveal" style="--delay:.06s">
+      <span class="stage-no">01</span><strong>充分理解</strong><b>流程图 / 时序图</b><p>理解业务链路<br />识别异常分支</p>
+    </section><i class="pipeline-arrow">→</i>
+    <section class="pipeline-stage reveal" style="--delay:.11s">
+      <span class="stage-no">02</span><strong>方案设计</strong><b>QSuperpowers</b><p>推演技术方案<br />补齐边界场景</p>
+    </section><i class="pipeline-arrow">→</i>
+    <section class="pipeline-stage reveal" style="--delay:.16s">
+      <span class="stage-no">03</span><strong>风险识别</strong><b>AI Code Review</b><p>审查并发、事务<br />一致性与异常风险</p>
+    </section><i class="pipeline-arrow">→</i>
+    <section class="pipeline-stage loop-stage reveal" style="--delay:.21s">
+      <span class="stage-no">04</span><strong>闭环验证</strong><b>Loop Programming</b><p>Run → Observe<br />Fix → Verify</p>
+      <small>从生成走向闭环</small>
+    </section><i class="pipeline-arrow">→</i>
+    <section class="pipeline-stage owner-stage reveal" style="--delay:.26s">
+      <span class="stage-no">05</span><strong>人工兜底</strong><b>Developer Review</b><p>复核技术设计<br />最终质量负责</p>
+    </section>
+  </div>
+
+  <div class="production-ready reveal" style="--delay:.31s">
+    <span>充分理解</span><i>+</i><span>方案推演</span><i>+</i><span>风险审查</span><i>+</i><span>真实验证</span><i>+</i><span>人工把关</span>
+    <strong>Production Ready</strong>
+  </div>
+
+  <div class="production-conclusion reveal" style="--delay:.36s">
+    <span>生产级代码 ≠ AI 生成的代码</span>
+    <strong>而是经过完整研发闭环，并由开发者对最终结果负责的代码。</strong>
+  </div>
+</div>
+
+<!--
+高质量 AI 研发不是把需求直接交给 AI 生成代码，而是一条完整的生产流水线：先充分理解业务，再推演方案、识别风险，通过 Loop Programming 接入真实环境反馈，最后由开发者完成关键复核并承担最终责任。只有经过理解、设计、审查、验证和人工把关的代码，才真正具备 Production Ready 的条件。
+-->

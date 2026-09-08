@@ -5,11 +5,13 @@
   --qfc-yellow-strong: #ffcc22;
   --qfc-cyan: #20bbd2;
   --qfc-blue: #078ad6;
-  --ink: #000000;
-  --text: #252525;
-  --muted: #777777;
-  --soft: #f2f2f2;
-  --line: #dedede;
+  --ink: #243746;
+  --text: #405260;
+  --muted: #71808a;
+  --deep: #31566b;
+  --deep-strong: #28495c;
+  --soft: #f1f5f7;
+  --line: #d9e2e7;
   --type-hero: 86px;
   --type-title: 58px;
   --type-subtitle: 40px;
@@ -92,7 +94,7 @@ p { color: var(--text); font-size: var(--type-body); line-height: 1.45 !importan
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #333;
+  color: #526671;
   font-family: Calibri, Arial, sans-serif;
   font-size: 20px;
   pointer-events: none;
