@@ -1240,3 +1240,63 @@
 .return-code-conclusion { display: grid; grid-template-columns: 150px 1fr; align-items: center; min-height: 72px; margin-top: 18px; background: var(--deep); }
 .return-code-conclusion span { display: grid; align-self: stretch; place-items: center; background: var(--qfc-yellow); color: var(--ink); font-size: 22px; font-weight: 700; }
 .return-code-conclusion strong { padding: 0 24px; color: #fff; font-size: 22px; font-weight: 500; }
+
+/* Chapter 02 · C-end detail flow and pressure-test evidence */
+.slidev-layout:has(.detail-flow-page) .topline,
+.slidev-layout:has(.pressure-test-page) .topline { min-height: 76px; margin-bottom: 28px; }
+.slidev-layout:has(.detail-flow-page) .topline span:first-child,
+.slidev-layout:has(.pressure-test-page) .topline span:first-child { font-size: 42px; }
+
+.detail-flow-page { display: grid; grid-template-columns: 1.18fr .82fr; gap: 26px; height: 830px; }
+.detail-flow-chart { display: grid; grid-template-rows: auto 17px auto 17px auto 17px auto 19px 1fr 19px auto 17px auto 17px auto; align-items: stretch; min-width: 0; padding: 14px 17px; background: var(--soft); }
+.flow-box { display: grid; place-items: center; min-height: 51px; padding: 7px 12px; border-left: 5px solid var(--qfc-yellow-strong); background: #fff; text-align: center; }
+.flow-box strong { color: var(--ink); font-size: 22px; line-height: 1.12; }
+.flow-box span { color: #526875; font-size: 16px; line-height: 1.28; }
+.flow-entry,
+.flow-result { width: 42%; justify-self: center; border-left-color: var(--qfc-cyan); }
+.flow-down { display: grid; place-items: center; color: var(--deep); font-size: 20px; font-style: normal; font-weight: 700; line-height: 1; }
+.flow-branches { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.flow-branches::before,
+.flow-branches::after { content: ""; position: absolute; top: -9px; height: 2px; background: #9bacb5; }
+.flow-branches::before { left: 16.5%; right: 16.5%; }
+.flow-branches::after { top: auto; bottom: -9px; left: 16.5%; right: 16.5%; }
+.flow-branches section { position: relative; min-height: 126px; padding: 11px 10px; border-top: 5px solid var(--deep); background: #fff; }
+.flow-branches section::before,
+.flow-branches section::after { content: ""; position: absolute; left: 50%; width: 2px; height: 10px; background: #9bacb5; }
+.flow-branches section::before { top: -14px; }
+.flow-branches section::after { bottom: -10px; }
+.flow-branches strong { display: block; margin-bottom: 7px; color: var(--ink); font-size: 20px; text-align: center; }
+.flow-branches span { display: block; color: #526875; font-size: 16px; line-height: 1.3; text-align: center; }
+.branch-arrow,
+.merge-arrow { color: var(--qfc-yellow-strong); }
+.detail-flow-notes { display: grid; grid-template-rows: repeat(4, 1fr); gap: 11px; }
+.detail-flow-notes section { padding: 16px 18px; border-left: 6px solid var(--qfc-yellow-strong); background: var(--soft); }
+.detail-flow-notes section:nth-child(even) { border-left-color: var(--qfc-cyan); }
+.detail-flow-notes strong { display: block; color: var(--ink); font-size: 22px; }
+.detail-flow-notes p { margin-top: 6px; color: #526875; font-size: 18px; line-height: 1.42 !important; }
+
+.pressure-test-page { display: grid; gap: 15px; }
+.pressure-summary { display: flex; align-items: center; min-height: 58px; padding: 11px 18px; background: var(--soft); }
+.pressure-summary strong { flex: 0 0 auto; color: var(--deep); font-size: 22px; }
+.pressure-summary span { color: var(--text); font-size: 21px; }
+.pressure-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 19px; }
+.pressure-table th { padding: 9px 14px; background: var(--deep); color: #fff; font-weight: 700; text-align: left; }
+.pressure-table td { padding: 8px 14px; border: 1px solid var(--line); color: var(--text); }
+.pressure-table th:nth-child(1),
+.pressure-table td:nth-child(1) { width: 29%; }
+.pressure-table th:nth-child(2),
+.pressure-table td:nth-child(2) { width: 27%; color: var(--deep); font-weight: 700; }
+.pressure-table tbody tr:nth-child(even) { background: var(--soft); }
+.pressure-analysis { display: grid; grid-template-columns: 210px 1fr; gap: 12px; align-items: start; }
+.pressure-analysis > strong { padding: 9px 13px; background: var(--qfc-yellow); color: var(--ink); font-size: 21px; }
+.pressure-analysis ul { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.pressure-analysis li { position: relative; padding-left: 18px; color: #526875; font-size: 17px; line-height: 1.34; }
+.pressure-analysis li::before { content: ""; position: absolute; top: 7px; left: 0; width: 7px; height: 7px; background: var(--qfc-cyan); }
+.pressure-analysis b { color: var(--ink); }
+.pressure-charts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; height: 265px; }
+.pressure-charts figure { display: grid; grid-template-rows: 1fr 32px; min-width: 0; margin: 0; overflow: hidden; border: 1px solid var(--line); background: #161a1d; }
+.pressure-charts img { width: 100%; height: 100%; object-fit: contain; background: #161a1d; }
+.pressure-charts figcaption { display: grid; place-items: center; background: var(--deep); color: #fff; font-size: 17px; font-weight: 700; }
+.pressure-conclusion { display: grid; grid-template-columns: 132px 1fr; align-items: center; min-height: 64px; background: var(--deep); }
+.pressure-conclusion strong { display: grid; align-self: stretch; place-items: center; background: var(--qfc-yellow); color: var(--ink); font-size: 20px; }
+.pressure-conclusion span { padding: 9px 16px; color: #fff; font-size: 18px; line-height: 1.35; }

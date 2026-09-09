@@ -360,7 +360,77 @@ mdc: true
 
 ---
 
-<div class="topline"><span>2.2 / B 页秒杀下单时序</span><span>完整流程图</span></div>
+<div class="topline"><span>2.2 / C端产品详情秒杀流程图</span><span></span></div>
+
+<div class="detail-flow-page">
+  <div class="detail-flow-chart reveal">
+    <div class="flow-box flow-entry"><strong>APP / RN / H5</strong><span>秒杀详情请求</span></div>
+    <i class="flow-down">↓</i>
+    <div class="flow-box"><strong>接入与治理层</strong><span>统一http处理入口 | 限流 | 参数解析 | 安全校验 | 反爬</span></div>
+    <i class="flow-down">↓</i>
+    <div class="flow-box"><strong>路由分发层</strong><span>按 T 值路由到秒杀详情链路</span></div>
+    <i class="flow-down">↓</i>
+    <div class="flow-box"><strong>业务编排层</strong><span>活动信息解析 | 商品/价格等加载 | 上下文组装 | 页面展示配置加载</span></div>
+    <i class="flow-down branch-arrow">↓</i>
+    <div class="flow-branches">
+      <section><strong>多级缓存层</strong><span>活动缓存<br>商品缓存<br>价格缓存<br>组件数据缓存</span></section>
+      <section><strong>并发防护层</strong><span>单Key合并加载<br>超时放行避免阻塞<br>降级兜底<br>防击穿/防放大</span></section>
+      <section><strong>页面组装层</strong><span>图片模块<br>榜单模块<br>购买模块<br>卡片聚合输出</span></section>
+    </div>
+    <i class="flow-down merge-arrow">↓</i>
+    <div class="flow-box"><strong>下游能力与第三方依赖层</strong><span>活动后台 | 日历报价 | 产品信息 | 榜单能力 | 图片能力<br>预定须知 | 配置服务/基础公共服务</span></div>
+    <i class="flow-down">↓</i>
+    <div class="flow-box"><strong>监控与运维保障层</strong><span>总耗时监控 | 成功率/失败率 | 缓存命中/回源信息 | 模块耗时 | 日志埋点</span></div>
+    <i class="flow-down">↓</i>
+    <div class="flow-box flow-result"><strong>详情页聚合结果</strong><span>返回APP</span></div>
+  </div>
+
+  <div class="detail-flow-notes">
+    <section class="reveal" style="--delay:.06s"><strong>分域多级缓存：</strong><p>基于Caffeine构建本地多级缓存，按业务域拆分活动、商品、价格等独立缓存实例，差异化配置容量与过期策略，有效承接99%以上的读请求流量，大幅降低下游服务压力。</p></section>
+    <section class="reveal" style="--delay:.12s"><strong>异步回源：</strong><p>回源任务提交至独立秒杀缓存线程池，配置严格的超时控制与自动取消机制，避免下游服务慢请求引发线程堆积，从架构层面防止服务雪崩风险。</p></section>
+    <section class="reveal" style="--delay:.18s"><strong>击穿防护机制：</strong><p>采用单Key合并加载策略，同热点并发请求仅触发一次回源，从根源抑制流量放大；配合空值缓存策略，有效防御缓存穿透攻击，保障缓存层稳定性。</p></section>
+    <section class="reveal" style="--delay:.24s"><strong>全链路模块级埋点：</strong><p>覆盖接口耗时、缓存命中率、请求成功率、回源占比等核心指标，实现从网关到业务层的全链路精细化监控，为性能优化提供数据支撑。</p></section>
+  </div>
+</div>
+
+---
+
+<div class="topline"><span>2.3 / 压测结果与下游保护</span><span></span></div>
+
+<div class="pressure-test-page">
+  <div class="pressure-summary"><strong>一、核心性能表现：</strong><span>4C8G 单机在 300 QPS 下可稳定支撑秒杀详情展示，同时通过本地缓存显著降低下游回源压力。</span></div>
+
+  <table class="pressure-table">
+    <thead><tr><th>维度</th><th>结果</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>单机稳定承载能力</td><td>300 QPS</td><td>满足秒杀活动展示需求</td></tr>
+      <tr><td>核心接口耗时</td><td>70ms内</td><td>低延迟、可稳定返回</td></tr>
+      <tr><td>压力边界</td><td>400 QPS</td><td>CPU接近85%，耗时明显放大</td></tr>
+      <tr><td>下游回源量</td><td>明显低于入口请求量</td><td>本地缓存有效拦截回源压力</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pressure-analysis">
+    <strong>二、性能拐点分析：</strong>
+    <ul>
+      <li><b>接口耗时图：</b>300 QPS 下接口耗时稳定，满足秒杀活动展示要求；400 QPS 后整体响应时间明显升高，进入单机高负载区间。</li>
+      <li><b>CPU 图：</b>随并发提升，CPU 利用率持续升高；当 CPU 接近 85% 时，外围逻辑与线程调度开销被明显放大。</li>
+      <li><b>回源量图：</b>入口流量提升后，下游回源量未线性增长；本地缓存有效吸收了大部分重复请求，显著降低了下游压力</li>
+    </ul>
+  </div>
+
+  <div class="pressure-charts reveal">
+    <figure><img src="/img/压测-接口耗时.png" alt="接口耗时图" /><figcaption>接口耗时图</figcaption></figure>
+    <figure><img src="/img/压测-CPU.png" alt="CPU 图" /><figcaption>CPU 图</figcaption></figure>
+    <figure><img src="/img/压测-回源量.png" alt="回源量图" /><figcaption>回源量图</figcaption></figure>
+  </div>
+
+  <div class="pressure-conclusion"><strong>验证结论：</strong><span>方案在单机 300 QPS 下运行稳定，具备上线能力；本地缓存有效降低下游回源压力，兼顾 C 端体验与下游系统保护，后续可通过横向扩容进一步提升承载上限。</span></div>
+</div>
+
+---
+
+<div class="topline"><span>2.4 / B 页秒杀下单时序</span><span>完整流程图</span></div>
 
 # B 页秒杀下单时序图
 
@@ -376,7 +446,7 @@ mdc: true
 
 ---
 
-<div class="topline"><span>2.3 / 库存回填流程</span><span>完整流程图</span></div>
+<div class="topline"><span>2.5 / 库存回填流程</span><span>完整流程图</span></div>
 
 # 库存回填流程图
 
