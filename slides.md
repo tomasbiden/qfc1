@@ -12,6 +12,76 @@ transition: fade-out
 mdc: true
 ---
 
+<div class="project-title-cover">
+  <div class="cover-visual" aria-hidden="true">
+    <div class="ticket-stack ticket-back"></div>
+    <div class="ticket-stack ticket-front">
+      <span>SECKILL</span>
+      <strong>00:00</strong>
+      <i></i>
+      <small>LIMITED TICKET</small>
+    </div>
+    <div class="cover-speed-lines"><i></i><i></i><i></i></div>
+  </div>
+  <div class="cover-title-copy reveal">
+    <img src="/qfc-logo.png" alt="QFC" />
+    <span>项目验收答辩</span>
+    <h1>门票秒杀系统</h1>
+    <p>Ticket Seckill System</p>
+  </div>
+  <div class="cover-camp-label"><strong>去哪儿门票研发</strong><span>Qunar Ticket</span></div>
+  <div class="cover-motto">To be coding，to be working！</div>
+</div>
+
+<!--
+本次汇报的项目是门票秒杀系统。项目围绕活动配置、库存扣减、订单创建、库存回填和异常兜底，建设一条完整、稳定的秒杀业务链路。
+-->
+
+---
+
+<div class="team-intro-page">
+  <header class="team-page-title reveal"><span>PROJECT TEAM</span><h1>团队成员</h1></header>
+  <div class="team-roster">
+    <div class="team-role-row reveal" style="--delay:.05s"><strong>DEV</strong><span>侯双剑</span><span>李柏林</span><span>李淑婷</span></div>
+    <div class="team-role-row reveal" style="--delay:.10s"><strong>逆向</strong><span>刘锐</span></div>
+    <div class="team-role-row reveal" style="--delay:.15s"><strong>FE</strong><span>秦玉佳</span><span>张雨行</span></div>
+    <div class="team-role-row reveal" style="--delay:.20s"><strong>QA</strong><span>肖琼</span></div>
+  </div>
+  <div class="team-visual reveal" style="--delay:.12s">
+    <span>7</span>
+    <strong>MEMBERS</strong>
+    <p>DEV · 逆向 · FE · QA</p>
+    <div class="team-collaboration-line"><i></i><i></i><i></i><i></i></div>
+    <small>共同完成门票秒杀系统建设</small>
+  </div>
+</div>
+
+<!--
+项目由七位成员共同完成：DEV 侯双剑、李柏林、李淑婷；逆向刘锐；FE 秦玉佳、张雨行；QA 肖琼。各岗位围绕同一条秒杀业务链路协同建设和验证。
+-->
+
+---
+
+<div class="deck-contents-page">
+  <div class="contents-sheet reveal">
+    <header><span>CONTENTS</span><h1>目录</h1></header>
+    <ol>
+      <li><b>01</b><strong>需求分析</strong></li>
+      <li><b>02</b><strong>系统设计与流程图</strong></li>
+      <li><b>03</b><strong>代码讲解</strong></li>
+      <li><b>04</b><strong>AI 探索与应用</strong></li>
+      <li><b>05</b><strong>项目总结与收获</strong></li>
+    </ol>
+    <div class="contents-keyboard" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</div>
+
+<!--
+本次汇报分为五个部分：需求分析、系统设计与流程图、代码讲解、AI 探索与应用，以及项目总结与收获。
+-->
+
+---
+
 <div class="chapter-cover">
   <div class="chapter-no reveal">01</div>
   <div class="chapter-copy reveal" style="--delay:.08s">
@@ -322,7 +392,264 @@ mdc: true
 
 ---
 
-<div class="topline"><span>3.1 / AI 探索与应用</span><span>复杂代码理解</span></div>
+<div class="chapter-cover">
+  <div class="chapter-no reveal">03</div>
+  <div class="chapter-copy reveal" style="--delay:.08s">
+    <h1>代码讲解</h1>
+  </div>
+</div>
+
+<!--
+第三章进入核心代码讲解。本章沿库存生命周期展开：先讲下单阶段如何安全扣减，再讲失败后如何统一回填。核心关注并发原子性、跨存储一致性和重复执行安全。
+-->
+
+---
+
+<div class="topline"><span>3.1 / 代码讲解</span><span>库存扣减总览</span></div>
+
+# 四层防线共同完成一次安全扣减
+
+<div class="deduct-defense-flow">
+  <section class="deduct-gate reveal">
+    <header><span>01</span><small>FILTER</small></header>
+    <strong>前置过滤</strong>
+    <p>单机限流<br />活动商品资格<br />Token 消费<br />Redis 库存预检查</p>
+    <footer>失败：快速返回</footer>
+  </section>
+  <i class="deduct-arrow">→</i>
+  <section class="deduct-gate reveal" style="--delay:.07s">
+    <header><span>02</span><small>SERIALIZE</small></header>
+    <strong>用户串行化</strong>
+    <p>activityId + userId<br />构造分布式锁<br /><b>获取失败不等待</b></p>
+    <footer>失败：请求处理中</footer>
+  </section>
+  <i class="deduct-arrow">→</i>
+  <section class="deduct-gate gate-focus reveal" style="--delay:.14s">
+    <header><span>03</span><small>ARBITRATE</small></header>
+    <strong>Redis 原子扣减</strong>
+    <p>GET 提前预判<br /><b>DECRBY 最终裁决</b><br />负数立即等量回补</p>
+    <footer>结果：成功 / 不足</footer>
+  </section>
+  <i class="deduct-arrow">→</i>
+  <section class="deduct-gate gate-final reveal" style="--delay:.21s">
+    <header><span>04</span><small>COMMIT</small></header>
+    <strong>DB 事务落单</strong>
+    <p>条件扣减日历库存<br />写入秒杀订单<br /><b>同事务提交</b></p>
+    <footer>异常：回补 Redis</footer>
+  </section>
+</div>
+
+<div class="deduct-boundary reveal" style="--delay:.28s">
+  <div><span>用户锁</span><strong>解决同一用户重复抢</strong><p>同一活动 + 同一用户只允许一个请求进入生单区</p></div>
+  <i>≠</i>
+  <div><span>原子扣减</span><strong>解决多个用户同时抢</strong><p>所有用户竞争同一库存 Key，由 DECRBY 返回值裁决</p></div>
+</div>
+
+<!--
+一次安全的库存扣减由四层防线共同完成。前置过滤负责挡住无效请求；活动加用户维度的分布式锁把同一用户的并发请求串行化；Redis DECRBY 裁决多个用户的库存竞争；最终由数据库事务同时完成日历库存扣减和秒杀单入库。用户锁和库存原子扣减解决的是两个不同层次的问题。
+-->
+
+---
+
+<div class="topline"><span>3.2 / 代码讲解</span><span>Redis 原子裁决</span></div>
+
+# GET 负责提前失败，DECRBY 完成并发裁决
+
+<div class="deduct-race-layout">
+  <section class="deduct-code-panel reveal">
+    <header><span>SeckillRedisGateway.deduct()</span><b>库存竞争核心</b></header>
+    <div class="deduct-code-body">
+      <p class="code-muted">long currentStock = getStock(stockKey);</p>
+      <p>if (currentStock &lt; quantity)</p>
+      <p class="indent">return INSUFFICIENT;</p>
+      <p class="code-focus">Long remaining =</p>
+      <p class="indent code-focus">sedis.decrBy(stockKey, quantity);</p>
+      <p>if (remaining &gt;= 0)</p>
+      <p class="indent code-success">return SUCCESS;</p>
+      <p class="code-compensate">returnStock(stockKey, quantity);</p>
+      <p>return INSUFFICIENT;</p>
+    </div>
+  </section>
+
+  <section class="race-board reveal" style="--delay:.10s">
+    <header><span>并发演算</span><strong>最后 1 份库存</strong></header>
+    <div class="race-scale"><span>读取</span><span>原子扣减</span><span>结果</span><span>处理</span></div>
+    <div class="race-row winner">
+      <b>请求 A</b><span>GET = 1</span><i>→</i><span>DECRBY = 0</span><i>→</i><strong>成功</strong>
+    </div>
+    <div class="race-row loser">
+      <b>请求 B</b><span>GET = 1</span><i>→</i><span>DECRBY = -1</span><i>→</i><strong>库存不足</strong>
+    </div>
+    <div class="race-rollback"><span>-1</span><i>INCRBY +1</i><strong>0</strong><p>撤销 B 的无效扣减</p></div>
+  </section>
+</div>
+
+<div class="deduct-unknown reveal" style="--delay:.18s">
+  <span>结果未知</span><strong>DECRBY 抛异常或返回 null</strong><i>→</i><b>STOCK_STATE_UNKNOWN</b><i>→</i><em>禁止盲目 INCRBY</em>
+  <p>无法确认命令是否执行时，直接回补可能凭空增加库存</p>
+</div>
+
+<div class="deduct-race-conclusion reveal" style="--delay:.24s"><span>判断边界</span><strong>GET 是性能预判，DECRBY 的原子返回值才决定请求是否真正获得库存</strong></div>
+
+<!--
+GET 预检查只能帮助库存不足的请求提前失败，不能作为并发正确性的依据。即使请求 A 和 B 都读取到库存为 1，DECRBY 仍会原子执行：A 得到 0 并成功，B 得到负数后立即等量回补并返回库存不足。如果 DECRBY 的结果未知，则不能盲目 INCRBY，否则可能凭空增加库存。
+-->
+
+---
+
+<div class="topline"><span>3.3 / 代码讲解</span><span>事务与异常补偿</span></div>
+
+# DB 同事务落单，失败后显式回补 Redis
+
+<div class="deduct-commit-flow reveal">
+  <div><span>01</span><strong>Redis 扣减成功</strong><p>库存竞争已经完成</p></div><i>→</i>
+  <div><span>02</span><strong>校验有效订单</strong><p>防止用户重复生单</p></div><i>→</i>
+  <div><span>03</span><strong>生成秒杀单号</strong><p>构造待落库订单</p></div><i>→</i>
+  <div class="commit-transaction"><span>04</span><strong>DB 本地事务</strong><p>扣日历库存 + 写秒杀单</p></div>
+</div>
+
+<div class="deduct-transaction-layout">
+  <section class="deduct-code-panel compact reveal" style="--delay:.08s">
+    <header><span>createAfterStockDeducted()</span><b>事务外补偿</b></header>
+    <div class="deduct-code-body">
+      <p>try {</p>
+      <p class="indent">SeckillOrder active =</p>
+      <p class="indent indent-more">selectActiveOrder(...);</p>
+      <p class="indent">if (active != null)</p>
+      <p class="indent indent-more">throwActiveOrderException(active);</p>
+      <p class="indent">long id = generateSeckillId();</p>
+      <p class="indent code-focus">return persistenceService.save(...);</p>
+      <p>} catch (Exception e) {</p>
+      <p class="indent code-compensate">redisGateway.returnStock(</p>
+      <p class="indent indent-more code-compensate">key, quantity);</p>
+      <p class="indent">throw e;</p>
+      <p>}</p>
+    </div>
+  </section>
+
+  <section class="transaction-box reveal" style="--delay:.14s">
+    <header><span>@Transactional</span><strong>同一个 DB 事务</strong></header>
+    <div><b>UPDATE</b><p>remaining_stock = remaining_stock - quantity</p><small>WHERE remaining_stock ≥ quantity</small></div>
+    <i>+</i>
+    <div><b>INSERT</b><p>写入 seckill_order</p><small>记录 Redis / DB 已扣减状态</small></div>
+    <footer>任一步失败：两项 DB 修改同时回滚</footer>
+  </section>
+
+  <section class="compensation-path reveal" style="--delay:.20s">
+    <header>异常出口</header>
+    <p>存在有效订单</p>
+    <p>单号生成失败</p>
+    <p>DB 库存不足</p>
+    <p>秒杀单写入失败</p>
+    <i>↓</i>
+    <strong>Redis INCRBY</strong>
+    <small>回补后继续抛出原异常</small>
+  </section>
+</div>
+
+<div class="deduct-consistency-conclusion reveal" style="--delay:.26s">
+  <div><span>DB 内部</span><strong>本地事务保证原子性</strong></div>
+  <i>+</i>
+  <div><span>Redis ↔ DB</span><strong>显式补偿推动一致性收敛</strong></div>
+</div>
+
+<!--
+Redis 扣减成功后，系统依次完成有效订单校验、秒杀单号生成和数据库落单。日历库存扣减与秒杀单写入位于同一个本地事务中，任一步失败都会一起回滚。Redis 不在数据库事务内，因此外层 catch 会显式发起 INCRBY 回补，并继续抛出原异常，保留准确的失败语义。
+-->
+
+---
+
+<div class="topline"><span>3.4 / 代码讲解</span><span>Redis 统一库存回填</span></div>
+
+# 三类触发场景，共用一套库存回填规则
+
+<div class="stock-return-overview">
+  <section class="return-triggers">
+    <div class="return-trigger reveal">
+      <span>01</span><div><strong>QMQ 订单状态同步</strong><p>异步同步发现订单失败</p></div>
+    </div>
+    <div class="return-trigger reveal" style="--delay:.06s">
+      <span>02</span><div><strong>主站生单失败通知</strong><p>主站明确通知生单失败</p></div>
+    </div>
+    <div class="return-trigger reveal" style="--delay:.12s">
+      <span>03</span><div><strong>QSchedule 定时兜底</strong><p>扫描并补偿长时间未完成订单</p></div>
+    </div>
+  </section>
+
+  <div class="return-converge reveal" style="--delay:.16s" aria-hidden="true">
+    <i></i><i></i><i></i><b>→</b>
+  </div>
+
+  <section class="return-service reveal" style="--delay:.20s">
+    <small>UNIFIED SERVICE</small>
+    <strong>stockReturnService<br />.returnStock(seckillId)</strong>
+    <p>调用方只负责判断<strong>何时触发</strong><br />统一服务负责决定<strong>如何回填</strong></p>
+  </section>
+
+  <section class="return-responsibilities">
+    <div class="return-step reveal" style="--delay:.24s"><span>01</span><strong>读取订单</strong><p>还原回填上下文</p></div>
+    <div class="return-step reveal" style="--delay:.29s"><span>02</span><strong>幂等判断</strong><p>已完成则直接返回</p></div>
+    <div class="return-step reveal" style="--delay:.34s"><span>03</span><strong>回填库存</strong><p>报价日历 → Redis</p></div>
+    <div class="return-step reveal" style="--delay:.39s"><span>04</span><strong>结果收敛</strong><p>状态与返回值明确</p></div>
+  </section>
+</div>
+
+<div class="return-overview-conclusion reveal" style="--delay:.44s">
+  <span>设计价值</span><strong>消除多入口重复实现，所有补偿路径遵守同一套幂等与异常策略</strong>
+</div>
+
+<!--
+库存回填可能由三个场景触发：QMQ 订单状态同步、主站生单失败通知，以及 QSchedule 定时兜底。三个入口不各自实现库存补偿，而是统一调用 stockReturnService.returnStock。这样，调用方只负责判断何时触发，统一服务集中负责读取订单、幂等判断、报价日历与 Redis 库存回填，以及最终结果收敛。
+-->
+
+---
+
+<div class="topline"><span>3.5 / 代码讲解</span><span>幂等与状态收敛</span></div>
+
+# 卫语句 + 状态机，让重复回填可控、异常结果可追踪
+
+<div class="return-code-layout">
+  <section class="return-code reveal">
+    <header><span>SeckillStockReturnServiceImpl.java</span><b>核心主流程</b></header>
+    <div class="return-code-body">
+      <p class="code-info">SeckillOrder order = orderMapper.selectBySeckillId(seckillId);</p>
+      <p class="code-highlight">if (isStockReturnCompleted(order))</p>
+      <p class="code-highlight indent">return StockReturnResult.ALREADY_RETURNED;</p>
+      <p>validateStockReturnPreconditions(seckillId, order);</p>
+      <p>calendarStockReturnService.returnStock(buildCommand(order));</p>
+      <p class="code-highlight">if (!checkRedisStockKeyExists(order))</p>
+      <p class="code-highlight indent">return StockReturnResult.DB_RETURNED_REDIS_EXPIRED;</p>
+      <p>returnRedisStock(buildCommand(order));</p>
+      <p>return StockReturnResult.RETURNED_NOW;</p>
+    </div>
+  </section>
+
+  <section class="return-code-notes">
+    <div class="code-note reveal" style="--delay:.08s"><span>01</span><div><strong>已回填：立即结束</strong><p>卫语句返回 <b>ALREADY_RETURNED</b>，重复消息不会再次增加库存。</p></div></div>
+    <div class="code-note reveal" style="--delay:.14s"><span>02</span><div><strong>Redis Key 过期：明确降级</strong><p>数据库库存已回填，不重建过期缓存，返回 <b>DB_RETURNED_REDIS_EXPIRED</b>。</p></div></div>
+    <div class="code-note danger reveal" style="--delay:.20s"><span>!</span><div><strong>结果未知：禁止盲目重试</strong><p>Redis 执行结果不确定时抛出明确异常，避免重复 <b>INCRBY</b> 造成超卖。</p></div></div>
+  </section>
+</div>
+
+<div class="return-state-machine reveal" style="--delay:.26s">
+  <div><small>初始状态</small><strong>DEDUCTED</strong><p>库存已扣减</p></div>
+  <i>抢占回填权 →</i>
+  <div class="state-active"><small>处理中</small><strong>RETURNING</strong><p>CAS + lockVersion</p></div>
+  <i>确认回填成功 →</i>
+  <div><small>终态</small><strong>RETURNED</strong><p>后续请求直接返回</p></div>
+</div>
+
+<div class="return-code-conclusion reveal" style="--delay:.32s">
+  <span>核心亮点</span><strong>正常分支用返回值表达，异常分支用错误码暴露；主流程保持线性，库存最多安全回填一次</strong>
+</div>
+
+<!--
+代码层面有三个关键点。第一，已经完成回填时通过卫语句直接返回 ALREADY_RETURNED，保证重复消息幂等。第二，Redis Key 已过期时只确认数据库库存已回填，不重建缓存，并返回明确的降级结果。第三，Redis 执行结果未知时禁止盲目重试，避免重复 INCRBY。状态上通过 DEDUCTED、RETURNING、RETURNED 三态和 lockVersion 抢占回填权，使库存最多安全回填一次，同时让处理过程可追踪。
+-->
+
+---
+
+<div class="topline"><span>4.1 / AI 探索与应用</span><span>复杂代码理解</span></div>
 
 # AI 辅助复杂代码理解
 
@@ -371,7 +698,7 @@ mdc: true
 
 ---
 
-<div class="topline"><span>3.2 / AI 探索与应用</span><span>可视化价值</span></div>
+<div class="topline"><span>4.2 / AI 探索与应用</span><span>可视化价值</span></div>
 
 # AI + 可视化降低复杂系统理解成本
 
@@ -417,7 +744,7 @@ mdc: true
 
 ---
 
-<div class="topline"><span>3.3 / AI 探索与应用</span><span>传统 AI 编程</span></div>
+<div class="topline"><span>4.3 / AI 探索与应用</span><span>传统 AI 编程</span></div>
 
 # AI 会“写代码”，但不一定真正“完成开发”
 
@@ -460,7 +787,7 @@ mdc: true
 
 ---
 
-<div class="topline"><span>3.4 / AI 探索与应用</span><span>Loop 编程</span></div>
+<div class="topline"><span>4.4 / AI 探索与应用</span><span>Loop 编程</span></div>
 
 # Loop 编程：构建 AI 自主验证闭环
 
@@ -507,7 +834,7 @@ Loop 编程为 AI 提供真实的执行和反馈环境，使它能够完成理�
 
 ---
 
-<div class="topline"><span>4.1 / 项目总结与收获</span><span>项目成果</span></div>
+<div class="topline"><span>5.1 / 项目总结与收获</span><span>项目成果</span></div>
 
 # 从 0 到 1 建设门票秒杀系统
 
@@ -557,7 +884,7 @@ Loop 编程为 AI 提供真实的执行和反馈环境，使它能够完成理�
 
 ---
 
-<div class="topline"><span>4.2 / 项目总结与收获</span><span>个人认知</span></div>
+<div class="topline"><span>5.2 / 项目总结与收获</span><span>个人认知</span></div>
 
 # AI 时代：从执行者走向决策者
 
@@ -591,7 +918,7 @@ AI 的能力正在逐渐覆盖理解、设计、编码、审查和测试等研�
 
 ---
 
-<div class="topline"><span>4.3 / 项目总结与收获</span><span>方法沉淀</span></div>
+<div class="topline"><span>5.3 / 项目总结与收获</span><span>方法沉淀</span></div>
 
 # AI 时代的高质量研发实践
 
@@ -630,4 +957,27 @@ AI 的能力正在逐渐覆盖理解、设计、编码、审查和测试等研�
 
 <!--
 高质量 AI 研发不是把需求直接交给 AI 生成代码，而是一条完整的生产流水线：先充分理解业务，再推演方案、识别风险，通过 Loop Programming 接入真实环境反馈，最后由开发者完成关键复核并承担最终责任。只有经过理解、设计、审查、验证和人工把关的代码，才真正具备 Production Ready 的条件。
+-->
+
+---
+
+<div class="thanks-page">
+  <div class="thanks-pattern" aria-hidden="true">
+    <div class="thanks-ticket one"></div>
+    <div class="thanks-ticket two"></div>
+    <div class="thanks-ticket three"></div>
+    <div class="thanks-keyboard"></div>
+  </div>
+  <div class="thanks-word reveal" aria-label="Thanks">
+    <span>T</span><span>h</span><span>a</span><span>n</span><span>k</span><span>s</span>
+  </div>
+  <div class="thanks-copy reveal" style="--delay:.12s">
+    <strong>感谢聆听</strong>
+    <span>门票秒杀系统项目组</span>
+  </div>
+  <div class="thanks-motto">To be coding，to be working！</div>
+</div>
+
+<!--
+感谢各位的聆听，以上是门票秒杀系统的项目汇报。
 -->
